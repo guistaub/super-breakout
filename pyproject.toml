@@ -1,15 +1,15 @@
 [tool.poetry]
-name = "Simon"
+name = "super-breakout"
 version = "0.1.0"
-description = "Simon game implemented in python"
+description = ""
 authors = ["guistaub <guistaub999@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 pygame = "^2.0.1"
+black = "^21.8b0"
 
 [tool.poetry.dev-dependencies]
-black = {version = "^21.7b0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
