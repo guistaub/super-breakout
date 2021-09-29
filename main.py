@@ -1,5 +1,7 @@
-from views.app import App
+from views import GameView
+import os
 
 if __name__ == "__main__":
-    app = App()
-    app.run_app()
+    os.environ["SDL_VIDEO_CENTERED"] = "1"
+    game = GameView()
+    game.run()
