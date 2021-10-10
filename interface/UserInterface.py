@@ -1,8 +1,9 @@
 import pygame
+from pygame.locals import *
 from state import GameState
 from pygame.math import Vector2
-from state.properties import *
-from state.properties import COLORS
+from properties import COLORS, WINDOW_PROPERTIES
+from utils import loadImage
 
 
 class UserInterface:
@@ -10,28 +11,27 @@ class UserInterface:
         pygame.init()
 
         # Game State
-        windowSize = Vector2(1600, 900)
-        self.gameState = GameState(windowSize)
-
+        windowSize = Vector2(WINDOW_PROPERTIES["width"], WINDOW_PROPERTIES["height"])
         # Render properties
 
         # Window
         self.window = pygame.display.set_mode((int(windowSize.x), int(windowSize.y)))
+        self.gameState = GameState(windowSize, self.window)
         pygame.display.set_caption("Super PyBreakout!")
-        pygame.display.set_icon(pygame.image.load("assets/icon.jpeg"))
+        # pygame.display.set_icon(pygame.image.load("assets/icon.jpeg"))
+        pygame.display.set_icon(loadImage("icon.jpeg"))
         # Loop properties
         self.clock = pygame.time.Clock()
         self.running = True
-
         self.moveCommand = Vector2(0, 0)
 
     def processInput(self):
         self.moveCommand = Vector2(0, 0)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            self.moveCommand.x = 1
+            self.moveCommand.x = 5
         elif keys[pygame.K_LEFT]:
-            self.moveCommand.x = -1
+            self.moveCommand.x = -5
         # elif keys[pygame.K_DOWN]:
         #     self.moveCommand.y = 1
         # elif keys[pygame.K_UP]:
@@ -45,9 +45,9 @@ class UserInterface:
                     self.running = False
                     break
                 elif event.key == pygame.K_RIGHT:
-                    self.moveCommand.x = 1
+                    self.moveCommand.x = 5
                 elif event.key == pygame.K_LEFT:
-                    self.moveCommand.x = -1
+                    self.moveCommand.x = -5
                 # elif event.key == pygame.K_DOWN:
                 #     self.moveCommand.y = 1
                 # elif event.key == pygame.K_UP:
@@ -56,17 +56,22 @@ class UserInterface:
     def update(self):
         self.gameState.update(self.moveCommand)
 
-    def renderElements(self, element):
+    def renderElements(self, element, color):
         pygame.draw.rect(
             self.window,
-            COLORS["RED"],
+            color,
             (element.position, Vector2(element.width, element.height)),
         )
 
     def render(self):
         self.window.fill(COLORS["BLACK"])
         for element in self.gameState.elements:
-            self.renderElements(element)
+            if element.type == "paddle":
+                self.renderElements(element, COLORS["WHITE"])
+            elif element.type == "ball":
+                self.renderElements(element, COLORS["RED"])
+            elif element.type == "tile":
+                self.renderElements(element, COLORS["GREEN"])
         # pygame.draw.rect(self.window, (255, 0, 0), (self.gameState.tilePos, (128, 40)))
         # pygame.draw.circle(self.window, (255, 0, 0), self.gameState.ballPos, 32)
         pygame.display.update()

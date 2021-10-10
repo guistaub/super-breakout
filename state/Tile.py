@@ -1,5 +1,5 @@
 from .GameItem import GameItem
-from .properties import TILE_PROPERTIES
+from properties import TILE_PROPERTIES
 
 
 class Tile(GameItem):

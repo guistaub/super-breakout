@@ -1,5 +1,5 @@
 from .GameItem import GameItem
-from .properties import PADDLE_PROPERTIES
+from properties import PADDLE_PROPERTIES
 
 
 class Paddle(GameItem):
@@ -12,7 +12,7 @@ class Paddle(GameItem):
     def move(self, moveVector):
         newPaddlePos = self.position + moveVector
 
-        if newPaddlePos.x < 0 or newPaddlePos.x >= self.state.bounds.x - 128:
+        if newPaddlePos.x < 0 or newPaddlePos.x >= self.state.bounds.x - self.width:
             return
 
         self.position = newPaddlePos
