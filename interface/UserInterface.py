@@ -1,12 +1,14 @@
 import pygame
 from pygame.locals import *
+from mode.MenuGameMode import MenuGameMode
 from state import GameState
 from pygame.math import Vector2
 from properties import COLORS, WINDOW_PROPERTIES
 from utils import loadImage
+from mode import GameModeObserver
 
 
-class UserInterface:
+class UserInterface(GameModeObserver):
     def __init__(self):
         pygame.init()
 
@@ -24,6 +26,11 @@ class UserInterface:
         self.clock = pygame.time.Clock()
         self.running = True
         self.moveCommand = Vector2(0, 0)
+        # Game mode
+        self.playGameMode = None
+        self.overlayGameMode = MenuGameMode()
+        self.overlayGameMode.addObserver(self)
+        self.currentActiveMode = "Overlay"
 
     def processInput(self):
         self.moveCommand = Vector2(0, 0)
@@ -78,6 +85,9 @@ class UserInterface:
 
     def run(self):
         while self.running:
+            # if self.currentActiveMode == "Overlay":
+            #     self.overlayGameMode.processInput()
+            #     self.overlayGameMode.update()
             self.processInput()
             self.update()
             self.render()

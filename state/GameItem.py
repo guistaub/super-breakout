@@ -26,3 +26,9 @@ class GameItem(Rect):
     def getYBounds(self):
         y = self.position.y
         return y, y + self.height
+
+    def getCenter(self):
+        return Vector2(
+            int(self.position.x + self.width / 2),
+            int(self.position.y + self.height / 2),
+        )

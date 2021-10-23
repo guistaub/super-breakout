@@ -4,7 +4,6 @@ from .Tile import Tile
 from .Paddle import Paddle
 from properties import *
 from .Ball import Ball
-import math
 
 
 class GameState:
@@ -28,7 +27,7 @@ class GameState:
         self.paddles = [
             element for element in self.elements if element.type == "paddle"
         ]
-        self.moveBallVector = Vector2(4, 4)
+        self.moveBallVector = Vector2(4, -4)
 
     def update(self, moveCommand):
         collision = False
@@ -40,7 +39,8 @@ class GameState:
                     collision = False
                     if self.isAabbCollision(element, paddle):
                         collision = True
-                        self.moveBallVector.y = -self.moveBallVector.y
+                        if self.shouldBallShiftYDirection(element, paddle):
+                            self.moveBallVector.y = -self.moveBallVector.y
                         element.move(self.moveBallVector)
                         break
                 tileIndex = 0
@@ -48,7 +48,10 @@ class GameState:
                     collision = False
                     if self.isAabbCollision(element, tile):
                         collision = True
-                        self.moveBallVector.y = -self.moveBallVector.y
+                        if self.shouldBallShiftXDirection(element, tile):
+                            self.moveBallVector.x = -self.moveBallVector.x
+                        if self.shouldBallShiftYDirection(element, tile):
+                            self.moveBallVector.y = -self.moveBallVector.y
                         self.tiles.pop(tileIndex)
                         self.elements.pop(tileIndex + 3)
                         element.move(self.moveBallVector)
@@ -77,6 +80,116 @@ class GameState:
             obj1.height + obj1.position.y > obj2.position.y
         )
         return xCollision and yCollision
+
+    def shouldBallShiftXDirection(self, obj1, obj2):
+        # Right side cases
+
+        # Obj1 is above obj2
+        if (
+            obj1.getCenter().x >= obj2.getCenter().x
+            and obj1.getCenter().y <= obj2.getCenter().y - obj2.height / 2
+        ):
+            return False
+        # Obj1 is on the upper right of obj2
+        elif (
+            obj1.getCenter().x >= obj2.getCenter().x
+            and obj1.getCenter().y <= obj2.getCenter().y
+        ):
+            return True
+        # Obj1 is below obj2
+        elif (
+            obj1.getCenter().x >= obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y + obj2.height / 2
+        ):
+            return False
+        # Obj1 is on the bottom right of obj2
+        elif (
+            obj1.getCenter().x >= obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y
+        ):
+            return True
+
+        # Left side cases
+
+        # Obj1 is above obj2
+        if (
+            obj1.getCenter().x < obj2.getCenter().x
+            and obj1.getCenter().y < obj2.getCenter().y - obj2.height / 2
+        ):
+            return False
+        # Obj1 is on the upper left of obj2
+        elif (
+            obj1.getCenter().x < obj2.getCenter().x
+            and obj1.getCenter().y < obj2.getCenter().y
+        ):
+            return True
+        # Obj1 is below obj2
+        elif (
+            obj1.getCenter().x < obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y + obj2.height / 2
+        ):
+            return False
+        # Obj1 is on the bottom left of obj2
+        elif (
+            obj1.getCenter().x > obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y
+        ):
+            return True
+
+    def shouldBallShiftYDirection(self, obj1, obj2):
+        # Right side cases
+
+        # Obj1 is above obj2
+        if (
+            obj1.getCenter().x > obj2.getCenter().x
+            and obj1.getCenter().y < obj2.getCenter().y - obj2.height / 2
+        ):
+            return True
+        # Obj1 is on the upper right of obj2
+        elif (
+            obj1.getCenter().x > obj2.getCenter().x
+            and obj1.getCenter().y < obj2.getCenter().y
+        ):
+            return False
+        # Obj1 is below obj2
+        elif (
+            obj1.getCenter().x > obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y + obj2.height / 2
+        ):
+            return True
+        # Obj1 is on the bottom right of obj2
+        elif (
+            obj1.getCenter().x > obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y
+        ):
+            return False
+
+        # Left side cases
+
+        # Obj1 is above obj2
+        if (
+            obj1.getCenter().x < obj2.getCenter().x
+            and obj1.getCenter().y < obj2.getCenter().y - obj2.height / 2
+        ):
+            return True
+        # Obj1 is on the upper left of obj2
+        elif (
+            obj1.getCenter().x < obj2.getCenter().x
+            and obj1.getCenter().y < obj2.getCenter().y
+        ):
+            return False
+        # Obj1 is below obj2
+        elif (
+            obj1.getCenter().x < obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y + obj2.height / 2
+        ):
+            return True
+        # Obj1 is on the bottom left of obj2
+        elif (
+            obj1.getCenter().x > obj2.getCenter().x
+            and obj1.getCenter().y > obj2.getCenter().y
+        ):
+            return False
 
     def createTiles(self):
         def generatePosition(x, y):
