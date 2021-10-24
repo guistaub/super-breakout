@@ -1,7 +1,7 @@
+from properties import COLORS
 from .GameMode import GameMode
-from utils import loadImage
-
 import pygame
+from pygame import Vector2
 
 
 class MenuGameMode(GameMode):
@@ -13,21 +13,15 @@ class MenuGameMode(GameMode):
 
         # Menu items
         self.menuItems = [
-            {"title": "Level 1", "action": None},
-            {"title": "Level 2", "action": None},
-            {"title": "Level 3", "action": None},
-            {"title": "Quit", "action": None},
+            {"title": "Classic Mode", "action": None},
+            {"title": "Cavity Mode", "action": None},
+            {"title": "Progressive Mode", "action": None},
+            {"title": "Scoreboard", "action": None},
+            {"title": "Quit", "action": self.notifyQuitRequested()},
         ]
 
-        # Compute menu width
-        self.menuWidth = 0
-        for item in self.menuItems:
-            surface = self.itemFont.render(item["title"], True, (200, 0, 0))
-            self.menuWidth = max(self.menuWidth, surface.get_width())
-            item["surface"] = surface
-
         self.currentMenuItem = 0
-        self.menuCursor = loadImage("cursor.png")
+        self.cursorRadius = 30
 
     def processInput(self):
         for event in pygame.event.get():
@@ -36,44 +30,44 @@ class MenuGameMode(GameMode):
                 break
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.notifyShowGameRequested()
+                    self.notifyQuitRequested()
+                    break
                 elif event.key == pygame.K_DOWN:
                     if self.currentMenuItem < len(self.menuItems) - 1:
                         self.currentMenuItem += 1
+                    else:
+                        self.currentMenuItem = 0
                 elif event.key == pygame.K_UP:
                     if self.currentMenuItem > 0:
                         self.currentMenuItem -= 1
+                    else:
+                        self.currentMenuItem = 4
                 elif event.key == pygame.K_RETURN:
                     menuItem = self.menuItems[self.currentMenuItem]
-                    try:
-                        menuItem["action"]()
-                    except Exception as ex:
-                        print(ex)
+                    menuItem["action"]()
 
     def update(self):
         pass
 
+    def showCursor(self, window, x, y):
+        pygame.draw.circle(window, COLORS["GREEN"], Vector2(x, y), self.cursorRadius)
+
     def render(self, window):
-        # Initial y
-        y = 50
+        # Initial y position
+        y = 150
 
-        # Title
-        surface = self.titleFont.render("SUPER BREAKOUT", True, (200, 0, 0))
-        x = (window.get_width() - surface.get_width()) // 2
-        window.blit(surface, (x, y))
-        y += (200 * surface.get_height()) // 100
+        titleSurface = self.titleFont.render("SUPER BREAKOUT!", True, COLORS["RED"])
+        titleX = (window.get_width() - titleSurface.get_width()) // 2
+        window.blit(titleSurface, (titleX, y))
+        y += (3 * titleSurface.get_height()) // 2
 
-        # Draw menu items
-        x = (window.get_width() - self.menuWidth) // 2
         for index, item in enumerate(self.menuItems):
-            # Item text
-            surface = item["surface"]
-            window.blit(surface, (x, y))
+            itemSurface = self.itemFont.render(item["title"], True, COLORS["RED"])
+            y += (3 * itemSurface.get_height()) // 2
+            itemX = (window.get_width() - itemSurface.get_width()) // 2
+            window.blit(itemSurface, (itemX, y))
 
-            # Cursor
             if index == self.currentMenuItem:
-                cursorX = x - self.menuCursor.get_width() - 10
-                cursorY = y + (surface.get_height() - self.menuCursor.get_height()) // 2
-                window.blit(self.menuCursor, (cursorX, cursorY))
-
-            y += (120 * surface.get_height()) // 100
+                cursorX = itemX - 2 * self.cursorRadius
+                cursorY = y + itemSurface.get_height() // 2
+                self.showCursor(window, cursorX, cursorY)

@@ -1,6 +1,5 @@
 import os
 import pygame
-from pygame import color
 from pygame.locals import *
 
 
