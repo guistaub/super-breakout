@@ -3,13 +3,13 @@ from properties import COLORS
 
 
 class TileLayer(Layer):
-    def __init__(self, gameState, units):
+    def __init__(self, gameState, tiles):
         self.gameState = gameState
-        self.units = units
+        self.tiles = tiles
 
     def render(self, window):
-        for unit in self.units:
-            if unit.type == "paddle":
-                self.renderTile(window, unit, COLORS["WHITE"])
-            elif unit.type == "tile":
-                self.renderTile(window, unit, COLORS["GREEN"])
+        for tile in self.tile:
+            if tile.type == "paddle":
+                self.renderElement(window, tile, COLORS["WHITE"])
+            elif tile.type == "tile":
+                self.renderElement(window, tile, COLORS["GREEN"])

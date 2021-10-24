@@ -7,11 +7,11 @@ class Layer(GameStateObserver):
     def unitDestroyed(self, unit):
         pass
 
-    def renderTile(self, window, tile, color):
+    def renderElement(self, window, element, color):
         pygame.draw.rect(
             window,
             color,
-            (tile.position, Vector2(tile.width, tile.height)),
+            (element.position, Vector2(element.width, element.height)),
         )
 
     def render(self, window):
