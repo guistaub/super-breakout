@@ -13,11 +13,14 @@ class MenuGameMode(GameMode):
 
         # Menu items
         self.menuItems = [
-            {"title": "Classic Mode", "action": None},
-            {"title": "Cavity Mode", "action": None},
-            {"title": "Progressive Mode", "action": None},
-            {"title": "Scoreboard", "action": None},
-            {"title": "Quit", "action": self.notifyQuitRequested()},
+            {"title": "Classic Mode", "action": self.notifyLoadClassicRequested},
+            {"title": "Cavity Mode", "action": self.notifyLoadCavityRequested},
+            {
+                "title": "Progressive Mode",
+                "action": self.notifyLoadProgressiveRequested,
+            },
+            {"title": "Scoreboard", "action": self.notifyShowScoreboardRequested},
+            {"title": "Quit", "action": self.notifyQuitRequested},
         ]
 
         self.currentMenuItem = 0

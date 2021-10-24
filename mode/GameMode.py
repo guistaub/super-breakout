@@ -5,17 +5,25 @@ class GameMode:
     def addObserver(self, observer):
         self.__observers.append(observer)
 
-    def notifyLoadLevelRequested(self, fileName):
+    def notifyLoadClassicRequested(self):
         for observer in self.__observers:
-            observer.loadLevelRequested(fileName)
+            observer.loadClassicRequested()
+
+    def notifyLoadCavityRequested(self):
+        for observer in self.__observers:
+            observer.loadCavityRequested()
+
+    def notifyLoadProgressiveRequested(self):
+        for observer in self.__observers:
+            observer.loadProgressiveRequested()
 
     def notifyShowMenuRequested(self):
         for observer in self.__observers:
             observer.showMenuRequested()
 
-    def notifyShowGameRequested(self):
+    def notifyShowScoreboardRequested(self):
         for observer in self.__observers:
-            observer.showGameRequested()
+            observer.showScoreboardRequested()
 
     def notifyGameWon(self):
         for observer in self.__observers:

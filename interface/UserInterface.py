@@ -1,11 +1,10 @@
 import pygame
 from pygame.locals import *
-from mode.MenuGameMode import MenuGameMode
+from mode import MenuGameMode, GameModeObserver, ClassicMode
 from state import GameState
 from pygame.math import Vector2
-from properties import COLORS, WINDOW_PROPERTIES, GAME_MODES
+from properties import *
 from utils import loadImage
-from mode import GameModeObserver
 
 
 class UserInterface(GameModeObserver):
@@ -25,9 +24,28 @@ class UserInterface(GameModeObserver):
 
         # Game mode
         self.playGameMode = None
+        self.playGameModes = [CLASSIC, CAVITY, PROGRESSIVE]
         self.overlayGameMode = MenuGameMode()
         self.overlayGameMode.addObserver(self)
-        self.currentActiveMode = GAME_MODES["OVERLAY"]
+        self.currentActiveMode = OVERLAY
+
+        # TODO add scoreboard game mode
+
+    def showMenuRequested(self):
+        self.currentActiveMode = OVERLAY
+
+    def loadClassicRequested(self):
+        self.currentActiveMode = CLASSIC
+        self.playGameMode = ClassicMode()
+        self.playGameMode.addObserver(self)
+
+    def loadCavityRequested(self):
+        # TODO implement cavity mode
+        pass
+
+    def loadProgressiveRequested(self):
+        # TODO implement progressive mode
+        pass
 
     def quitRequested(self):
         self.running = False
@@ -35,10 +53,15 @@ class UserInterface(GameModeObserver):
     def run(self):
         while self.running:
             self.window.fill(COLORS["BLACK"])
-            if self.currentActiveMode == GAME_MODES["OVERLAY"]:
+            if self.currentActiveMode == OVERLAY:
                 self.overlayGameMode.processInput()
                 self.overlayGameMode.update()
                 self.overlayGameMode.render(self.window)
+            elif self.currentActiveMode in self.playGameModes:
+                self.playGameMode.processInput()
+                self.playGameMode.update()
+                self.playGameMode.render(self.window)
+            # TODO add scoreboard game mode processing
 
             pygame.display.update()
             self.clock.tick(60)
