@@ -9,10 +9,6 @@ class GameMode:
         for observer in self.__observers:
             observer.loadLevelRequested(fileName)
 
-    def notifyWorldSizeChanged(self, worldSize):
-        for observer in self.__observers:
-            observer.worldSizeChanged(worldSize)
-
     def notifyShowMenuRequested(self):
         for observer in self.__observers:
             observer.showMenuRequested()
