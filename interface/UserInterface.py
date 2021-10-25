@@ -1,6 +1,12 @@
 import pygame
 from pygame.locals import *
-from mode import MenuGameMode, GameModeObserver, ClassicMode
+from mode import (
+    MenuGameMode,
+    GameModeObserver,
+    ClassicMode,
+    CavityMode,
+    ProgressiveMode,
+)
 from state import GameState
 from pygame.math import Vector2
 from properties import *
@@ -45,6 +51,10 @@ class UserInterface(GameModeObserver):
 
     def loadProgressiveRequested(self):
         # TODO implement progressive mode
+        pass
+
+    def showScoreboardRequested(self):
+        # TODO implement scoreboard
         pass
 
     def quitRequested(self):
