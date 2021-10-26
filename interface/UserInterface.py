@@ -7,7 +7,6 @@ from mode import (
     CavityMode,
     ProgressiveMode,
 )
-from state import GameState
 from pygame.math import Vector2
 from properties import *
 from utils import loadImage
@@ -16,11 +15,11 @@ from utils import loadImage
 class UserInterface(GameModeObserver):
     def __init__(self):
         pygame.init()
+        # TODO change window resolution
         windowSize = Vector2(WINDOW_PROPERTIES["width"], WINDOW_PROPERTIES["height"])
 
         # Window
         self.window = pygame.display.set_mode((int(windowSize.x), int(windowSize.y)))
-        self.gameState = GameState(windowSize, self.window)
         pygame.display.set_caption("Super PyBreakout!")
         pygame.display.set_icon(loadImage("icon.jpeg"))
 

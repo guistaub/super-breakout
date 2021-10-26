@@ -4,7 +4,7 @@ from state import GameStateObserver
 
 
 class Layer(GameStateObserver):
-    def unitDestroyed(self, unit):
+    def elementDestroyed(self, element):
         pass
 
     def renderElement(self, window, element, color):

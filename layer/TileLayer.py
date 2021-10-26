@@ -8,8 +8,5 @@ class TileLayer(Layer):
         self.tiles = tiles
 
     def render(self, window):
-        for tile in self.tile:
-            if tile.type == "paddle":
-                self.renderElement(window, tile, COLORS["WHITE"])
-            elif tile.type == "tile":
-                self.renderElement(window, tile, COLORS["GREEN"])
+        for tile in self.tiles:
+            self.renderElement(window, tile, COLORS["GREEN"])

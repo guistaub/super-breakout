@@ -9,13 +9,13 @@ class Ball(GameItem):
         self.width = BALL_PROPERTIES["width"]
         self.type = BALL_PROPERTIES["type"]
 
-    def move(self, moveVector):
-        newBallPos = self.position + moveVector
+    # def move(self, moveVector):
+    #     newBallPos = self.position + moveVector
 
-        if newBallPos.x < 0 or newBallPos.x + self.width > WINDOW_PROPERTIES["width"]:
-            return
+    #     if newBallPos.x < 0 or newBallPos.x + self.width > WINDOW_PROPERTIES["width"]:
+    #         return
 
-        if newBallPos.y < 0 or newBallPos.y + self.height > WINDOW_PROPERTIES["height"]:
-            return
+    #     if newBallPos.y < 0 or newBallPos.y + self.height > WINDOW_PROPERTIES["height"]:
+    #         return
 
-        self.position = newBallPos
+    #     self.position = newBallPos

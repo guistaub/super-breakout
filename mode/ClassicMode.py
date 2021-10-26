@@ -1,21 +1,24 @@
-from .GameMode import GameMode
+from .PlayGameMode import PlayGameMode
+from state import GameState
 import pygame
+from layer import BallLayer, PaddleLayer, TileLayer
+from command import MovePaddleCommand
 
 
-class ClassicMode(GameMode):
+class ClassicMode(PlayGameMode):
     def __init__(self):
         super().__init__()
 
-    def processInput(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.notifyQuitRequested()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.notifyShowMenuRequested()
+        # Game State
+        self.gameState.loadClassic()
 
-    def update(self):
-        pass
+        # Layers
+        self.layers = [
+            BallLayer(self.gameState, self.gameState.balls),
+            TileLayer(self.gameState, self.gameState.tiles),
+            PaddleLayer(self.gameState, self.gameState.paddles),
+        ]
 
-    def render(self, window):
-        pygame.draw.circle(window, (255, 255, 255), (200, 200), 40)
+        # Observers
+        for layer in self.layers:
+            self.gameState.addObserver(layer)

@@ -1,3 +1,3 @@
 class GameStateObserver:
-    def tileDestroyed(self, tile):
+    def elementDestroyed(self, element):
         pass
