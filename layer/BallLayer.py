@@ -7,6 +7,9 @@ class BallLayer(Layer):
         self.gameState = gameState
         self.balls = balls
 
+    def ballDirectionChanged(self, ball):
+        pass
+
     def render(self, window):
         for ball in self.balls:
             self.renderElement(window, ball, COLORS["RED"])

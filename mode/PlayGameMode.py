@@ -2,7 +2,7 @@ from .GameMode import GameMode
 from state import GameState
 import pygame
 from pygame import Vector2
-from command import MovePaddleCommand
+from command import MovePaddleCommand, MoveBallCommand
 
 
 class PlayGameMode(GameMode):
@@ -23,12 +23,17 @@ class PlayGameMode(GameMode):
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            moveVector.x += 20
+            moveVector.x += 5
         elif keys[pygame.K_LEFT]:
-            moveVector.x -= 20
+            moveVector.x -= 5
 
         for paddle in self.gameState.paddles:
             self.commands.append(MovePaddleCommand(self.gameState, paddle, moveVector))
+
+        for index, ball in enumerate(self.gameState.balls):
+            self.commands.append(
+                MoveBallCommand(self.gameState, ball, self.gameState.ballVectors[index])
+            )
 
     def update(self):
         for command in self.commands:
