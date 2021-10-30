@@ -1,5 +1,3 @@
-from pygame.draw import rect
-from pygame.math import Vector2
 from pygame import Rect
 from properties import UNIT_STATUS_ALIVE
 

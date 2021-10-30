@@ -2,7 +2,7 @@ from .GameMode import GameMode
 from state import GameState
 import pygame
 from pygame import Vector2
-from command import MovePaddleCommand, MoveBallCommand
+from command import MovePaddleCommand, MoveBallCommand, ShiftBallDirectionCommand
 
 
 class PlayGameMode(GameMode):
@@ -33,6 +33,11 @@ class PlayGameMode(GameMode):
         for index, ball in enumerate(self.gameState.balls):
             self.commands.append(
                 MoveBallCommand(self.gameState, ball, self.gameState.ballVectors[index])
+            )
+            self.commands.append(
+                ShiftBallDirectionCommand(
+                    self.gameState, ball, self.gameState.ballVectors[index], index
+                )
             )
 
     def update(self):
