@@ -39,6 +39,12 @@ class UserInterface(GameModeObserver):
     def showMenuRequested(self):
         self.currentActiveMode = OVERLAY
 
+    def gameWon(self):
+        self.currentActiveMode = OVERLAY
+
+    def gameLost(self):
+        self.currentActiveMode = OVERLAY
+
     def loadClassicRequested(self):
         self.currentActiveMode = CLASSIC
         self.playGameMode = ClassicMode()

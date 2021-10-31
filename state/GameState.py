@@ -2,7 +2,13 @@ from pygame.math import Vector2
 from .Tile import Tile
 from .Ball import Ball
 from .Paddle import Paddle
-from properties import WINDOW_PROPERTIES, BALL_PROPERTIES, PADDLE_PROPERTIES
+from properties import (
+    TILE_PROPERTIES,
+    WINDOW_PROPERTIES,
+    BALL_PROPERTIES,
+    PADDLE_PROPERTIES,
+    TILE_GRID_PROPERTIES,
+)
 
 
 class GameState:
@@ -23,10 +29,16 @@ class GameState:
         ballXStart = (windowX - BALL_PROPERTIES["width"]) // 2
         self.balls.append(Ball(self, Vector2(ballXStart, 500)))
         self.ballVectors.append(Vector2(4, -4))
+        self.balls.append(Ball(self, Vector2(ballXStart, 500)))
+        self.ballVectors.append(Vector2(2, -5))
+        self.balls.append(Ball(self, Vector2(ballXStart, 500)))
+        self.ballVectors.append(Vector2(4, 2))
 
         paddlesXStart = (windowX - PADDLE_PROPERTIES["width"]) // 2
         self.paddles.append(Paddle(self, Vector2(paddlesXStart, 700)))
         self.paddles.append(Paddle(self, Vector2(paddlesXStart, 800)))
+
+        self.drawTiles()
 
     def isAabbCollision(self, ball, element):
         xCollision = (ball.position.x < (element.position.x + element.width)) and (
@@ -45,8 +57,19 @@ class GameState:
             and position.y + element.height <= self.bounds.y
         )
 
-    def moveBall(self, ball):
-        pass
+    def generatePosition(self, x, y):
+        return Vector2(x, y)
+
+    def drawTiles(self):
+        x = TILE_GRID_PROPERTIES["X_START"]
+        y = TILE_GRID_PROPERTIES["Y_START"]
+        for i in range(TILE_GRID_PROPERTIES["ROWS"]):
+            for j in range(TILE_GRID_PROPERTIES["COLS"]):
+                tile = Tile(self, self.generatePosition(x, y))
+                self.tiles.append(tile)
+                x += TILE_GRID_PROPERTIES["SPACING"] + tile.width
+            y += TILE_GRID_PROPERTIES["SPACING"] + tile.height
+            x = TILE_GRID_PROPERTIES["X_START"]
 
     def notifyBallDirectionChanged(self, ball):
         for observer in self.__observers:
