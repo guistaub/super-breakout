@@ -8,6 +8,3 @@ class Tile(GameItem):
         self.height = TILE_PROPERTIES["height"]
         self.width = TILE_PROPERTIES["width"]
         self.type = TILE_PROPERTIES["type"]
-
-    def move(self, moveVector):
-        pass

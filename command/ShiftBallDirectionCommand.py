@@ -3,26 +3,26 @@ from properties import UNIT_STATUS_ALIVE, WINDOW_PROPERTIES, BALL_PROPERTIES
 
 
 class ShiftBallDirectionCommand(Command):
-    def __init__(self, gameState, ball, moveBallVector):
+    def __init__(self, gameState, ball):
         self.gameState = gameState
         self.ball = ball
-        self.moveBallVector = moveBallVector
+        # self.ball.movementVector = ball.movementVector
 
     def run(self):
         if self.ball.status != UNIT_STATUS_ALIVE:
             return
 
-        newBallPos = self.ball.position + self.moveBallVector
+        newBallPos = self.ball.position + self.ball.movementVector
 
         if not self.gameState.isInsideBounds(newBallPos, self.ball):
             if (
                 newBallPos.x < 0
                 or newBallPos.x + BALL_PROPERTIES["width"] > WINDOW_PROPERTIES["width"]
             ):
-                self.moveBallVector.x = -self.moveBallVector.x
+                self.ball.movementVector.x = -self.ball.movementVector.x
             elif (
                 newBallPos.y < 0
                 or newBallPos.y + BALL_PROPERTIES["height"]
                 > WINDOW_PROPERTIES["height"]
             ):
-                self.moveBallVector.y = -self.moveBallVector.y
+                self.ball.movementVector.y = -self.ball.movementVector.y

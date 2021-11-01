@@ -3,16 +3,15 @@ from properties import UNIT_STATUS_ALIVE
 
 
 class MoveBallCommand(Command):
-    def __init__(self, gameState, ball, moveVector):
+    def __init__(self, gameState, ball):
         self.gameState = gameState
         self.ball = ball
-        self.moveVector = moveVector
 
     def run(self):
         if self.ball.status != UNIT_STATUS_ALIVE:
             return
 
-        newBallPos = self.ball.position + self.moveVector
+        newBallPos = self.ball.position + self.ball.movementVector
 
         if not self.gameState.isInsideBounds(newBallPos, self.ball):
             return
