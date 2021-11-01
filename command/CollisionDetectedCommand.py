@@ -20,3 +20,4 @@ class CollisionDetectedCommand(Command):
                 self.verticalBallShift()
             elif self.element.type == TILE_PROPERTIES["type"]:
                 self.element.status = UNIT_STATUS_DESTROYED
+                self.gameState.notifyElementDestroyed(self.element)

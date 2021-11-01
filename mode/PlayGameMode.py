@@ -15,7 +15,7 @@ from command import (
     DeleteDestroyedCommand,
     CollisionDetectedCommand,
 )
-from layer import BallLayer, TileLayer, PaddleLayer
+from layer import BallLayer, TileLayer, PaddleLayer, ScoreLayer
 
 
 class PlayGameMode(GameMode):
@@ -30,6 +30,7 @@ class PlayGameMode(GameMode):
             BallLayer(self.gameState, self.gameState.balls),
             TileLayer(self.gameState, self.gameState.tiles),
             PaddleLayer(self.gameState, self.gameState.paddles),
+            ScoreLayer(self.gameState),
         ]
 
         # Observers
@@ -65,6 +66,7 @@ class PlayGameMode(GameMode):
                 >= WINDOW_PROPERTIES["height"]
             ):
                 ball.status = UNIT_STATUS_DESTROYED
+                self.gameState.notifyElementDestroyed(ball)
 
             self.commands.append(ShiftBallDirectionCommand(self.gameState, ball))
 
