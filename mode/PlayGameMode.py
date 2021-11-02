@@ -1,8 +1,6 @@
 from properties import (
     BALL_PROPERTIES,
     TILE_PROPERTIES,
-    WINDOW_PROPERTIES,
-    UNIT_STATUS_DESTROYED,
 )
 from .GameMode import GameMode
 from state import GameState
@@ -60,13 +58,6 @@ class PlayGameMode(GameMode):
 
         for ball in self.gameState.balls:
             self.commands.append(MoveBallCommand(self.gameState, ball))
-
-            if (
-                ball.position.y + BALL_PROPERTIES["height"]
-                >= WINDOW_PROPERTIES["height"]
-            ):
-                ball.status = UNIT_STATUS_DESTROYED
-                self.gameState.notifyElementDestroyed(ball)
 
             self.commands.append(ShiftBallDirectionCommand(self.gameState, ball))
 

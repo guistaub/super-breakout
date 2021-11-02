@@ -1,5 +1,9 @@
 from .Command import Command
-from properties import UNIT_STATUS_ALIVE, WINDOW_PROPERTIES, BALL_PROPERTIES
+from properties import (
+    UNIT_STATUS_ALIVE,
+    WINDOW_PROPERTIES,
+    BALL_PROPERTIES,
+)
 
 
 class ShiftBallDirectionCommand(Command):

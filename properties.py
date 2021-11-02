@@ -1,3 +1,5 @@
+# COLORS
+
 COLORS = {
     "BLUE": (0, 0, 200),
     "RED": (200, 0, 0),
@@ -5,6 +7,8 @@ COLORS = {
     "BLACK": (0, 0, 0),
     "WHITE": (255, 255, 255),
 }
+
+# GAME ELEMENT PROPERTIES
 
 PADDLE_PROPERTIES = {"width": 130, "height": 20, "type": "paddle"}
 
