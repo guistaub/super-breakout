@@ -23,6 +23,9 @@ class PlayGameMode(GameMode):
         self.gameState = GameState()
         self.layers = []
 
+        # Game Mode
+        self.gameMode = None
+
         # Layers
         self.layers = [
             BallLayer(self.gameState, self.gameState.balls),
@@ -49,26 +52,29 @@ class PlayGameMode(GameMode):
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            moveVector.x += 5
+            moveVector.x += 10
         elif keys[pygame.K_LEFT]:
-            moveVector.x -= 5
+            moveVector.x -= 10
 
         for paddle in self.gameState.paddles:
             self.commands.append(MovePaddleCommand(self.gameState, paddle, moveVector))
 
         for ball in self.gameState.balls:
+            print(ball.status)
             self.commands.append(MoveBallCommand(self.gameState, ball))
 
             self.commands.append(ShiftBallDirectionCommand(self.gameState, ball))
 
             for paddle in self.gameState.paddles:
                 self.commands.append(
-                    CollisionDetectedCommand(self.gameState, ball, paddle)
+                    CollisionDetectedCommand(
+                        self.gameState, ball, paddle, self.gameMode
+                    )
                 )
 
             for tile in self.gameState.tiles:
                 self.commands.append(
-                    CollisionDetectedCommand(self.gameState, ball, tile)
+                    CollisionDetectedCommand(self.gameState, ball, tile, self.gameMode)
                 )
 
             self.commands.append(

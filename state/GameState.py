@@ -8,6 +8,7 @@ from properties import (
     PADDLE_PROPERTIES,
     TILE_GRID_PROPERTIES,
 )
+from random import randint
 
 
 class GameState:
@@ -17,23 +18,32 @@ class GameState:
         self.balls = []
         self.paddles = []
         self.tiles = []
+        self.cavitySpawnBallsPositions = []
 
     def addObserver(self, observer):
         self.__observers.append(observer)
 
-    def loadClassic(self):
-        windowX = WINDOW_PROPERTIES["width"]
-
-        ballXStart = (windowX - BALL_PROPERTIES["width"]) // 2
+    def loadBaseGame(self):
+        ballXStart = (self.bounds.x - BALL_PROPERTIES["width"]) // 2
         self.balls.append(Ball(self, Vector2(ballXStart, 500), Vector2(4, -4)))
-        self.balls.append(Ball(self, Vector2(ballXStart, 500), Vector2(2, -4)))
-        self.balls.append(Ball(self, Vector2(ballXStart, 500), Vector2(4, 2)))
-
-        paddlesXStart = (windowX - PADDLE_PROPERTIES["width"]) // 2
+        paddlesXStart = (self.bounds.x - PADDLE_PROPERTIES["width"]) // 2
         self.paddles.append(Paddle(self, Vector2(paddlesXStart, 700)))
         self.paddles.append(Paddle(self, Vector2(paddlesXStart, 800)))
-
         self.drawTiles()
+
+    def loadClassic(self):
+        self.loadBaseGame()
+
+    def loadCavity(self):
+        self.loadBaseGame()
+        indexes = []
+        for _ in range(2):
+            selectedIndex = -1
+            while selectedIndex not in indexes and selectedIndex < 0:
+                selectedIndex = randint(0, len(self.tiles) - 1)
+            self.cavitySpawnBallsPositions.append(
+                self.tiles[randint(0, len(self.tiles) - 1)].position
+            )
 
     def isAabbCollision(self, ball, element):
         xCollision = (ball.position.x < (element.position.x + element.width)) and (
@@ -62,10 +72,6 @@ class GameState:
                 x += TILE_GRID_PROPERTIES["SPACING"] + tile.width
             y += TILE_GRID_PROPERTIES["SPACING"] + tile.height
             x = TILE_GRID_PROPERTIES["X_START"]
-
-    def notifyBallDirectionChanged(self, ball):
-        for observer in self.__observers:
-            observer.ballDirectionChanged(ball)
 
     def notifyElementDestroyed(self, element):
         for observer in self.__observers:

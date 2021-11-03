@@ -10,7 +10,6 @@ class ShiftBallDirectionCommand(Command):
     def __init__(self, gameState, ball):
         self.gameState = gameState
         self.ball = ball
-        # self.ball.movementVector = ball.movementVector
 
     def run(self):
         if self.ball.status != UNIT_STATUS_ALIVE:
@@ -24,9 +23,5 @@ class ShiftBallDirectionCommand(Command):
                 or newBallPos.x + BALL_PROPERTIES["width"] > WINDOW_PROPERTIES["width"]
             ):
                 self.ball.movementVector.x = -self.ball.movementVector.x
-            elif (
-                newBallPos.y < 0
-                or newBallPos.y + BALL_PROPERTIES["height"]
-                > WINDOW_PROPERTIES["height"]
-            ):
+            elif newBallPos.y < 0:
                 self.ball.movementVector.y = -self.ball.movementVector.y

@@ -3,7 +3,6 @@ from properties import (
     BALL_PROPERTIES,
     TILE_PROPERTIES,
     UNIT_STATUS_ALIVE,
-    UNIT_STATUS_DESTROYED,
 )
 
 

@@ -51,8 +51,9 @@ class UserInterface(GameModeObserver):
         self.playGameMode.addObserver(self)
 
     def loadCavityRequested(self):
-        # TODO implement cavity mode
-        pass
+        self.currentActiveMode = CAVITY
+        self.playGameMode = CavityMode()
+        self.playGameMode.addObserver(self)
 
     def loadProgressiveRequested(self):
         # TODO implement progressive mode
