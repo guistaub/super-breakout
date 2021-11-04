@@ -1,7 +1,3 @@
-from properties import (
-    BALL_PROPERTIES,
-    TILE_PROPERTIES,
-)
 from .GameMode import GameMode
 from state import GameState
 import pygame
@@ -28,9 +24,9 @@ class PlayGameMode(GameMode):
 
         # Layers
         self.layers = [
-            BallLayer(self.gameState, self.gameState.balls),
-            TileLayer(self.gameState, self.gameState.tiles),
-            PaddleLayer(self.gameState, self.gameState.paddles),
+            BallLayer(self.gameState),
+            TileLayer(self.gameState),
+            PaddleLayer(self.gameState),
             ScoreLayer(self.gameState),
         ]
 
@@ -56,43 +52,40 @@ class PlayGameMode(GameMode):
         elif keys[pygame.K_LEFT]:
             moveVector.x -= 10
 
-        for paddle in self.gameState.paddles:
+        for paddle in self.gameState.getActivePaddles():
             self.commands.append(MovePaddleCommand(self.gameState, paddle, moveVector))
 
-        for ball in self.gameState.balls:
-            print(ball.status)
+        for ball in self.gameState.getActiveBalls():
             self.commands.append(MoveBallCommand(self.gameState, ball))
 
             self.commands.append(ShiftBallDirectionCommand(self.gameState, ball))
 
-            for paddle in self.gameState.paddles:
+            for paddle in self.gameState.getActivePaddles():
                 self.commands.append(
                     CollisionDetectedCommand(
                         self.gameState, ball, paddle, self.gameMode
                     )
                 )
 
-            for tile in self.gameState.tiles:
+            for tile in self.gameState.getActiveTiles():
                 self.commands.append(
                     CollisionDetectedCommand(self.gameState, ball, tile, self.gameMode)
                 )
 
-            self.commands.append(
-                DeleteDestroyedCommand(self.gameState, BALL_PROPERTIES["type"])
-            )
-            self.commands.append(
-                DeleteDestroyedCommand(self.gameState, TILE_PROPERTIES["type"])
-            )
+            self.commands.append(DeleteDestroyedCommand(self.gameState))
 
     def update(self):
         for command in self.commands:
             command.run()
         self.commands.clear()
 
-        if len(self.gameState.balls) > 0 and len(self.gameState.tiles) == 0:
+        if (
+            len(self.gameState.getActiveBalls()) > 0
+            and len(self.gameState.getActiveTiles()) == 0
+        ):
             self.notifyGameWon()
 
-        if len(self.gameState.balls) == 0:
+        if len(self.gameState.getActiveBalls()) == 0:
             self.notifyGameLost()
 
     def render(self, window):

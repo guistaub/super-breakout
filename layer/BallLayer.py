@@ -3,10 +3,9 @@ from properties import COLORS
 
 
 class BallLayer(Layer):
-    def __init__(self, gameState, balls):
+    def __init__(self, gameState):
         self.gameState = gameState
-        self.balls = balls
 
     def render(self, window):
-        for ball in self.balls:
+        for ball in self.gameState.getActiveBalls():
             self.renderElement(window, ball, COLORS["RED"])

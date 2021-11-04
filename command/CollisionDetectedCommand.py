@@ -52,12 +52,6 @@ class CollisionDetectedCommand(Command):
                     vectorY = 0
                     while vectorY == 0:
                         vectorY = randint(-5, 5)
-                    newBallList = self.gameState.balls[:]
-                    newBallList.append(
-                        Ball(
-                            self.gameState,
-                            self.element.position,
-                            Vector2(vectorX, vectorY),
-                        )
+                    self.gameState.addBall(
+                        self.element.position, Vector2(vectorX, vectorY)
                     )
-                    self.gameState.balls[:] = newBallList

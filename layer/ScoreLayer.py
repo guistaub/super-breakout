@@ -16,23 +16,32 @@ class ScoreLayer(Layer):
         self.scoreFont = pygame.font.Font(CARTOON_FONT, 30)
 
         self.score = 0
-        self.buffer = 0
+        self.counter = 0
+        self.multiplier = 1
+
+    def getScoreMultiplierValue(self):
+        return self.multiplier * len(self.gameState.getActiveBalls())
+
+    def incrementMultiplierValue(self):
+        if self.counter == 1000:
+            self.multiplier += 0.5
 
     def elementDestroyed(self, element):
+        self.incrementMultiplierValue()
         if element.type == TILE_PROPERTIES["type"]:
-            self.score += 100
-            if self.buffer < 1000:
-                self.buffer += 100
+            self.score += int(100 * self.getScoreMultiplierValue())
+            if self.counter < 1000:
+                self.counter += 100
             else:
-                self.buffer = 0
+                self.counter = 0
 
             self.incrementBallSpeed()
         elif element.type == BALL_PROPERTIES["type"]:
             self.score -= 100
 
     def incrementBallSpeed(self):
-        if self.buffer == 1000:
-            for ball in self.gameState.balls:
+        if self.counter == 1000:
+            for ball in self.gameState.getActiveBalls():
                 if ball.movementVector.x > 0 and ball.movementVector.y > 0:
                     ball.movementVector += Vector2(1, 1)
                 elif ball.movementVector.x < 0 and ball.movementVector.y < 0:
