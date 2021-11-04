@@ -1,5 +1,9 @@
 from .Command import Command
-from properties import UNIT_STATUS_ALIVE
+from properties import (
+    UNIT_STATUS_ALIVE,
+    WINDOW_PROPERTIES,
+    UNIT_STATUS_DESTROYED,
+)
 
 
 class MoveBallCommand(Command):
@@ -12,6 +16,11 @@ class MoveBallCommand(Command):
             return
 
         newBallPos = self.ball.position + self.ball.movementVector
+
+        if newBallPos.y + self.ball.height >= WINDOW_PROPERTIES["height"]:
+            self.ball.status = UNIT_STATUS_DESTROYED
+            self.gameState.notifyElementDestroyed(self.ball)
+            return
 
         if not self.gameState.isInsideBounds(newBallPos, self.ball):
             return

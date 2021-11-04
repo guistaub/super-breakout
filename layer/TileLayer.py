@@ -3,10 +3,9 @@ from properties import COLORS
 
 
 class TileLayer(Layer):
-    def __init__(self, gameState, tiles):
+    def __init__(self, gameState):
         self.gameState = gameState
-        self.tiles = tiles
 
     def render(self, window):
-        for tile in self.tiles:
+        for tile in self.gameState.getActiveTiles():
             self.renderElement(window, tile, COLORS["GREEN"])

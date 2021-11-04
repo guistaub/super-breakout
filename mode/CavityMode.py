@@ -1,16 +1,13 @@
-from .GameMode import GameMode
+from properties import CAVITY
+from .PlayGameMode import PlayGameMode
 
 
-class CavityMode(GameMode):
-    # TODO implement cavity addicional methods and setup
-    def processInput(self):
-        # TODO implement cavity processInput method
-        pass
+class CavityMode(PlayGameMode):
+    def __init__(self):
+        super().__init__()
 
-    def update(self):
-        # TODO implement cavity update method
-        pass
+        # Game Mode
+        self.gameMode = CAVITY
 
-    def render(self, window):
-        # TODO implement cavity render method
-        pass
+        # Game State
+        self.gameState.loadCavity()

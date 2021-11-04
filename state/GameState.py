@@ -7,33 +7,74 @@ from properties import (
     BALL_PROPERTIES,
     PADDLE_PROPERTIES,
     TILE_GRID_PROPERTIES,
+    UNIT_STATUS_ALIVE,
 )
+from random import randint
 
 
 class GameState:
     def __init__(self):
         self.__observers = []
         self.bounds = Vector2(WINDOW_PROPERTIES["width"], WINDOW_PROPERTIES["height"])
-        self.balls = []
-        self.paddles = []
-        self.tiles = []
+        self._balls = []
+        self._paddles = []
+        self._tiles = []
+        self.cavitySpawnBallsPositions = []
 
     def addObserver(self, observer):
         self.__observers.append(observer)
 
-    def loadClassic(self):
-        windowX = WINDOW_PROPERTIES["width"]
+    def getActiveBalls(self):
+        return self._balls
 
-        ballXStart = (windowX - BALL_PROPERTIES["width"]) // 2
-        self.balls.append(Ball(self, Vector2(ballXStart, 500), Vector2(4, -4)))
-        self.balls.append(Ball(self, Vector2(ballXStart, 500), Vector2(2, -4)))
-        self.balls.append(Ball(self, Vector2(ballXStart, 500), Vector2(4, 2)))
+    # def setBallSpeeds(self, incrementVector):
+    #     for ball in self._balls:
+    #         ball.movementVector += incrementVector
 
-        paddlesXStart = (windowX - PADDLE_PROPERTIES["width"]) // 2
-        self.paddles.append(Paddle(self, Vector2(paddlesXStart, 700)))
-        self.paddles.append(Paddle(self, Vector2(paddlesXStart, 800)))
+    def addTile(self, position):
+        self._tiles.append(Tile(self, position))
 
+    def addBall(self, position, movementVector):
+        self._balls.append(Ball(self, position, movementVector))
+
+    def removeDestroyedBalls(self):
+        self._balls = [ball for ball in self._balls if ball.status == UNIT_STATUS_ALIVE]
+
+    def getActiveTiles(self):
+        return self._tiles
+
+    def removeDestroyedTiles(self):
+        self._tiles = [tile for tile in self._tiles if tile.status == UNIT_STATUS_ALIVE]
+
+    def getActivePaddles(self):
+        return self._paddles
+
+    def addPaddle(self, position):
+        self._paddles.append(Paddle(self, position))
+
+    def loadBaseGame(self):
+        ballXStart = (self.bounds.x - BALL_PROPERTIES["width"]) // 2
+        self.addBall(Vector2(ballXStart, 500), Vector2(4, -4))
+        paddlesXStart = (self.bounds.x - PADDLE_PROPERTIES["width"]) // 2
+        self.addPaddle(Vector2(paddlesXStart, 700))
+        self.addPaddle(Vector2(paddlesXStart, 800))
         self.drawTiles()
+
+    def loadClassic(self):
+        self.loadBaseGame()
+
+    def loadCavity(self):
+        self.loadBaseGame()
+        indexes = []
+        for _ in range(2):
+            selectedIndex = -1
+            while selectedIndex not in indexes and selectedIndex < 0:
+                selectedIndex = randint(0, len(self.getActiveTiles()) - 1)
+            self.cavitySpawnBallsPositions.append(
+                self.getActiveTiles()[
+                    randint(0, len(self.getActiveTiles()) - 1)
+                ].position
+            )
 
     def isAabbCollision(self, ball, element):
         xCollision = (ball.position.x < (element.position.x + element.width)) and (
@@ -58,14 +99,10 @@ class GameState:
         for i in range(TILE_GRID_PROPERTIES["ROWS"]):
             for j in range(TILE_GRID_PROPERTIES["COLS"]):
                 tile = Tile(self, Vector2(x, y))
-                self.tiles.append(tile)
+                self._tiles.append(tile)
                 x += TILE_GRID_PROPERTIES["SPACING"] + tile.width
             y += TILE_GRID_PROPERTIES["SPACING"] + tile.height
             x = TILE_GRID_PROPERTIES["X_START"]
-
-    def notifyBallDirectionChanged(self, ball):
-        for observer in self.__observers:
-            observer.ballDirectionChanged(ball)
 
     def notifyElementDestroyed(self, element):
         for observer in self.__observers:

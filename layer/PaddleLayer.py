@@ -3,10 +3,9 @@ from properties import COLORS
 
 
 class PaddleLayer(Layer):
-    def __init__(self, gameState, paddles):
+    def __init__(self, gameState):
         self.gameState = gameState
-        self.paddles = paddles
 
     def render(self, window):
-        for paddle in self.paddles:
+        for paddle in self.gameState.getActivePaddles():
             self.renderElement(window, paddle, COLORS["WHITE"])

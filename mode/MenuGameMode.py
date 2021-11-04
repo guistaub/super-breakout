@@ -1,4 +1,4 @@
-from properties import COLORS
+from properties import COLORS, CARTOON_FONT
 from .GameMode import GameMode
 import pygame
 from pygame import Vector2
@@ -8,8 +8,8 @@ class MenuGameMode(GameMode):
     def __init__(self):
         super().__init__()
         # Font
-        self.titleFont = pygame.font.Font("assets/BD_Cartoon_Shout.ttf", 72)
-        self.itemFont = pygame.font.Font("assets/BD_Cartoon_Shout.ttf", 48)
+        self.titleFont = pygame.font.Font(CARTOON_FONT, 72)
+        self.itemFont = pygame.font.Font(CARTOON_FONT, 48)
 
         # Menu items
         self.menuItems = [

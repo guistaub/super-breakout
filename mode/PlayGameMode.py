@@ -1,9 +1,3 @@
-from properties import (
-    BALL_PROPERTIES,
-    TILE_PROPERTIES,
-    WINDOW_PROPERTIES,
-    UNIT_STATUS_DESTROYED,
-)
 from .GameMode import GameMode
 from state import GameState
 import pygame
@@ -15,7 +9,7 @@ from command import (
     DeleteDestroyedCommand,
     CollisionDetectedCommand,
 )
-from layer import BallLayer, TileLayer, PaddleLayer
+from layer import BallLayer, TileLayer, PaddleLayer, ScoreLayer
 
 
 class PlayGameMode(GameMode):
@@ -25,11 +19,15 @@ class PlayGameMode(GameMode):
         self.gameState = GameState()
         self.layers = []
 
+        # Game Mode
+        self.gameMode = None
+
         # Layers
         self.layers = [
-            BallLayer(self.gameState, self.gameState.balls),
-            TileLayer(self.gameState, self.gameState.tiles),
-            PaddleLayer(self.gameState, self.gameState.paddles),
+            BallLayer(self.gameState),
+            TileLayer(self.gameState),
+            PaddleLayer(self.gameState),
+            ScoreLayer(self.gameState),
         ]
 
         # Observers
@@ -50,50 +48,44 @@ class PlayGameMode(GameMode):
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            moveVector.x += 5
+            moveVector.x += 10
         elif keys[pygame.K_LEFT]:
-            moveVector.x -= 5
+            moveVector.x -= 10
 
-        for paddle in self.gameState.paddles:
+        for paddle in self.gameState.getActivePaddles():
             self.commands.append(MovePaddleCommand(self.gameState, paddle, moveVector))
 
-        for ball in self.gameState.balls:
+        for ball in self.gameState.getActiveBalls():
             self.commands.append(MoveBallCommand(self.gameState, ball))
-
-            if (
-                ball.position.y + BALL_PROPERTIES["height"]
-                >= WINDOW_PROPERTIES["height"]
-            ):
-                ball.status = UNIT_STATUS_DESTROYED
 
             self.commands.append(ShiftBallDirectionCommand(self.gameState, ball))
 
-            for paddle in self.gameState.paddles:
+            for paddle in self.gameState.getActivePaddles():
                 self.commands.append(
-                    CollisionDetectedCommand(self.gameState, ball, paddle)
+                    CollisionDetectedCommand(
+                        self.gameState, ball, paddle, self.gameMode
+                    )
                 )
 
-            for tile in self.gameState.tiles:
+            for tile in self.gameState.getActiveTiles():
                 self.commands.append(
-                    CollisionDetectedCommand(self.gameState, ball, tile)
+                    CollisionDetectedCommand(self.gameState, ball, tile, self.gameMode)
                 )
 
-            self.commands.append(
-                DeleteDestroyedCommand(self.gameState, BALL_PROPERTIES["type"])
-            )
-            self.commands.append(
-                DeleteDestroyedCommand(self.gameState, TILE_PROPERTIES["type"])
-            )
+            self.commands.append(DeleteDestroyedCommand(self.gameState))
 
     def update(self):
         for command in self.commands:
             command.run()
         self.commands.clear()
 
-        if len(self.gameState.balls) > 0 and len(self.gameState.tiles) == 0:
+        if (
+            len(self.gameState.getActiveBalls()) > 0
+            and len(self.gameState.getActiveTiles()) == 0
+        ):
             self.notifyGameWon()
 
-        if len(self.gameState.balls) == 0:
+        if len(self.gameState.getActiveBalls()) == 0:
             self.notifyGameLost()
 
     def render(self, window):
