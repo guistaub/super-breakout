@@ -46,4 +46,26 @@ UNIT_STATUS_DESTROYED = "DESTROYED"
 
 # FILE PATHS
 
-CARTOON_FONT = "assets/BD_Cartoon_Shout.ttf"
+CARTOON_FONT = "BD_Cartoon_Shout.ttf"
+
+MENU_MUSIC = "menu_sound.mp3"
+
+MENU_NAVIGATION_SOUND = "270315__littlerobotsoundfactory__menu-navigate-03.wav"
+
+ELEMENT_COLLISION_SOUND = "270327__littlerobotsoundfactory__hit-00.wav"
+
+ELEMENT_DESTROYED_SOUND = "270343__littlerobotsoundfactory__shoot-01.wav"
+
+GAME_WON_JINGLE = "270319__littlerobotsoundfactory__jingle-win-01.wav"
+
+GAME_LOST_JINGLE = "270329__littlerobotsoundfactory__jingle-lose-00.wav"
+
+BALL_ADDED_SOUND = "270330__littlerobotsoundfactory__jingle-achievement-01.wav"
+
+# MESSAGES
+
+GAME_START_MESSAGE = "SUPER PY BREAKOUT - PRESS ENTER TO CONTINUE"
+
+GAME_WON_MESSAGE = "VICTORY! - PRESS ENTER TO CONTINUE"
+
+GAME_LOST_MESSAGE = "GAME LOST... - PRESS ENTER TO CONTINUE"

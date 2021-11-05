@@ -107,3 +107,11 @@ class GameState:
     def notifyElementDestroyed(self, element):
         for observer in self.__observers:
             observer.elementDestroyed(element)
+
+    def notifyCollisionDetected(self):
+        for observer in self.__observers:
+            observer.collisionDetected()
+
+    def notifyNewBallAdded(self):
+        for observer in self.__observers:
+            observer.newBallAdded()

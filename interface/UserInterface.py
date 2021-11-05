@@ -1,4 +1,12 @@
 import pygame
+from properties import (
+    MENU_MUSIC,
+    GAME_START_MESSAGE,
+    GAME_WON_JINGLE,
+    GAME_LOST_JINGLE,
+    GAME_WON_MESSAGE,
+    GAME_LOST_MESSAGE,
+)
 from pygame.locals import *
 from mode import (
     MenuGameMode,
@@ -6,10 +14,11 @@ from mode import (
     ClassicMode,
     CavityMode,
     ProgressiveMode,
+    MessageGameMode,
 )
 from pygame.math import Vector2
 from properties import *
-from utils import loadImage
+from utils import loadImage, loadMusic, loadSound
 
 
 class UserInterface(GameModeObserver):
@@ -30,20 +39,40 @@ class UserInterface(GameModeObserver):
         # Game mode
         self.playGameMode = None
         self.playGameModes = [CLASSIC, CAVITY, PROGRESSIVE]
-        self.overlayGameMode = MenuGameMode()
+        self.overlayGameMode = MessageGameMode(GAME_START_MESSAGE)
         self.overlayGameMode.addObserver(self)
         self.currentActiveMode = OVERLAY
+
+        # Music
+        self.menuMusic = loadSound(MENU_MUSIC)
+        self.menuMusic.set_volume(0.1)
+        self.menuMusic.play()
+
+        self.gameWonJingle = loadSound(GAME_WON_JINGLE)
+        self.gameWonJingle.set_volume(0.2)
+
+        self.gameLostJingle = loadSound(GAME_LOST_JINGLE)
+        self.gameLostJingle.set_volume(0.2)
 
         # TODO add scoreboard game mode
 
     def showMenuRequested(self):
+        self.menuMusic.stop()
         self.currentActiveMode = OVERLAY
+        self.overlayGameMode = MenuGameMode()
+        self.overlayGameMode.addObserver(self)
 
     def gameWon(self):
+        self.gameWonJingle.play()
         self.currentActiveMode = OVERLAY
+        self.overlayGameMode = MessageGameMode(GAME_WON_MESSAGE)
+        self.overlayGameMode.addObserver(self)
 
     def gameLost(self):
+        self.gameLostJingle.play()
         self.currentActiveMode = OVERLAY
+        self.overlayGameMode = MessageGameMode(GAME_LOST_MESSAGE)
+        self.overlayGameMode.addObserver(self)
 
     def loadClassicRequested(self):
         self.currentActiveMode = CLASSIC

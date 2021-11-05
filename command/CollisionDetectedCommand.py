@@ -1,5 +1,4 @@
 from .Command import Command
-from state import Ball
 from properties import PADDLE_PROPERTIES, TILE_PROPERTIES, UNIT_STATUS_DESTROYED, CAVITY
 from pygame.math import Vector2
 from random import randint
@@ -32,6 +31,7 @@ class CollisionDetectedCommand(Command):
 
     def run(self):
         if self.gameState.isAabbCollision(self.ball, self.element):
+            self.gameState.notifyCollisionDetected()
             if self.element.type == PADDLE_PROPERTIES["type"]:
                 if self.ball.movementVector.y > 0:
                     self.verticalBallShift()

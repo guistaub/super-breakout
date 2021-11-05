@@ -1,5 +1,4 @@
 from .Layer import Layer
-import pygame
 from pygame.math import Vector2
 from properties import (
     CARTOON_FONT,
@@ -8,19 +7,20 @@ from properties import (
     BALL_PROPERTIES,
     TILE_PROPERTIES,
 )
+from utils import loadFont
 
 
 class ScoreLayer(Layer):
     def __init__(self, gameState):
         self.gameState = gameState
-        self.scoreFont = pygame.font.Font(CARTOON_FONT, 30)
+        self.scoreFont = loadFont(CARTOON_FONT, 30)
 
         self.score = 0
         self.counter = 0
         self.multiplier = 1
 
-    def getScoreMultiplierValue(self):
-        return self.multiplier * len(self.gameState.getActiveBalls())
+    def newBallAdded(self):
+        self.multiplier *= len(self.gameState.getActiveBalls())
 
     def incrementMultiplierValue(self):
         if self.counter == 1000:
@@ -29,7 +29,7 @@ class ScoreLayer(Layer):
     def elementDestroyed(self, element):
         self.incrementMultiplierValue()
         if element.type == TILE_PROPERTIES["type"]:
-            self.score += int(100 * self.getScoreMultiplierValue())
+            self.score += int(100 * self.multiplier)
             if self.counter < 1000:
                 self.counter += 100
             else:

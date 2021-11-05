@@ -9,7 +9,8 @@ from command import (
     DeleteDestroyedCommand,
     CollisionDetectedCommand,
 )
-from layer import BallLayer, TileLayer, PaddleLayer, ScoreLayer
+from layer import BallLayer, TileLayer, PaddleLayer, ScoreLayer, SoundLayer
+from properties import ELEMENT_COLLISION_SOUND, ELEMENT_DESTROYED_SOUND
 
 
 class PlayGameMode(GameMode):
@@ -28,6 +29,7 @@ class PlayGameMode(GameMode):
             TileLayer(self.gameState),
             PaddleLayer(self.gameState),
             ScoreLayer(self.gameState),
+            SoundLayer(ELEMENT_COLLISION_SOUND, ELEMENT_DESTROYED_SOUND),
         ]
 
         # Observers

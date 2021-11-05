@@ -1,4 +1,5 @@
-from properties import COLORS, CARTOON_FONT
+from properties import COLORS, CARTOON_FONT, MENU_NAVIGATION_SOUND
+from utils import loadSound, loadFont
 from .GameMode import GameMode
 import pygame
 from pygame import Vector2
@@ -8,8 +9,8 @@ class MenuGameMode(GameMode):
     def __init__(self):
         super().__init__()
         # Font
-        self.titleFont = pygame.font.Font(CARTOON_FONT, 72)
-        self.itemFont = pygame.font.Font(CARTOON_FONT, 48)
+        self.titleFont = loadFont(CARTOON_FONT, 72)
+        self.itemFont = loadFont(CARTOON_FONT, 48)
 
         # Menu items
         self.menuItems = [
@@ -23,6 +24,10 @@ class MenuGameMode(GameMode):
             {"title": "Quit", "action": self.notifyQuitRequested},
         ]
 
+        # Navigation Sound
+        self.selectItemSound = loadSound(MENU_NAVIGATION_SOUND)
+        self.selectItemSound.set_volume(0.2)
+
         self.currentMenuItem = 0
         self.cursorRadius = 30
 
@@ -32,6 +37,7 @@ class MenuGameMode(GameMode):
                 self.notifyQuitRequested()
                 break
             elif event.type == pygame.KEYDOWN:
+                self.selectItemSound.play()
                 if event.key == pygame.K_ESCAPE:
                     self.notifyQuitRequested()
                     break
