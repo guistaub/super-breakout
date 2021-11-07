@@ -6,6 +6,9 @@ from properties import (
     GAME_LOST_JINGLE,
     GAME_WON_MESSAGE,
     GAME_LOST_MESSAGE,
+    CLASSIC,
+    PROGRESSIVE,
+    CAVITY,
 )
 from pygame.locals import *
 from mode import (
@@ -18,7 +21,7 @@ from mode import (
 )
 from pygame.math import Vector2
 from properties import *
-from utils import loadImage, loadMusic, loadSound
+from utils import loadImage, loadSound
 
 
 class UserInterface(GameModeObserver):
@@ -85,8 +88,9 @@ class UserInterface(GameModeObserver):
         self.playGameMode.addObserver(self)
 
     def loadProgressiveRequested(self):
-        # TODO implement progressive mode
-        pass
+        self.currentActiveMode = PROGRESSIVE
+        self.playGameMode = ProgressiveMode()
+        self.playGameMode.addObserver(self)
 
     def showScoreboardRequested(self):
         # TODO implement scoreboard

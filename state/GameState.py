@@ -20,16 +20,13 @@ class GameState:
         self._paddles = []
         self._tiles = []
         self.cavitySpawnBallsPositions = []
+        self.paddleMoventSpeed = 0
 
     def addObserver(self, observer):
         self.__observers.append(observer)
 
     def getActiveBalls(self):
         return self._balls
-
-    # def setBallSpeeds(self, incrementVector):
-    #     for ball in self._balls:
-    #         ball.movementVector += incrementVector
 
     def addTile(self, position):
         self._tiles.append(Tile(self, position))
@@ -52,19 +49,26 @@ class GameState:
     def addPaddle(self, position):
         self._paddles.append(Paddle(self, position))
 
+    def setPaddleMovementSpeed(self, value):
+        self.paddleMoventSpeed += value
+
     def loadBaseGame(self):
         ballXStart = (self.bounds.x - BALL_PROPERTIES["width"]) // 2
         self.addBall(Vector2(ballXStart, 500), Vector2(4, -4))
         paddlesXStart = (self.bounds.x - PADDLE_PROPERTIES["width"]) // 2
-        self.addPaddle(Vector2(paddlesXStart, 700))
         self.addPaddle(Vector2(paddlesXStart, 800))
         self.drawTiles()
+        self.paddleMoventSpeed = 10
 
     def loadClassic(self):
         self.loadBaseGame()
+        paddlesXStart = (self.bounds.x - PADDLE_PROPERTIES["width"]) // 2
+        self.addPaddle(Vector2(paddlesXStart, 700))
 
     def loadCavity(self):
         self.loadBaseGame()
+        paddlesXStart = (self.bounds.x - PADDLE_PROPERTIES["width"]) // 2
+        self.addPaddle(Vector2(paddlesXStart, 700))
         indexes = []
         for _ in range(2):
             selectedIndex = -1
@@ -75,6 +79,9 @@ class GameState:
                     randint(0, len(self.getActiveTiles()) - 1)
                 ].position
             )
+
+    def loadProgressive(self):
+        self.loadBaseGame()
 
     def isAabbCollision(self, ball, element):
         xCollision = (ball.position.x < (element.position.x + element.width)) and (

@@ -31,15 +31,16 @@ class CollisionDetectedCommand(Command):
 
     def run(self):
         if self.gameState.isAabbCollision(self.ball, self.element):
-            self.gameState.notifyCollisionDetected()
             if self.element.type == PADDLE_PROPERTIES["type"]:
                 if self.ball.movementVector.y > 0:
+                    self.gameState.notifyCollisionDetected()
                     self.verticalBallShift()
 
             elif self.element.type == TILE_PROPERTIES["type"]:
                 self.getRelativePosition()
                 self.element.status = UNIT_STATUS_DESTROYED
                 self.gameState.notifyElementDestroyed(self.element)
+                self.gameState.notifyCollisionDetected()
 
                 if (
                     self.gameMode == CAVITY
@@ -55,3 +56,4 @@ class CollisionDetectedCommand(Command):
                     self.gameState.addBall(
                         self.element.position, Vector2(vectorX, vectorY)
                     )
+                    self.gameState.notifyNewBallAdded()
