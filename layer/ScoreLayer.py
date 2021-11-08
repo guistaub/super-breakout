@@ -15,7 +15,6 @@ class ScoreLayer(Layer):
         self.gameState = gameState
         self.scoreFont = loadFont(CARTOON_FONT, 30)
 
-        self.score = 0
         self.counter = 0
         self.multiplier = 1
 
@@ -29,7 +28,7 @@ class ScoreLayer(Layer):
     def elementDestroyed(self, element):
         self.incrementMultiplierValue()
         if element.type == TILE_PROPERTIES["type"]:
-            self.score += int(100 * self.multiplier)
+            self.gameState.setScore(int(100 * self.multiplier))
             if self.counter < 1000:
                 self.counter += 100
             else:
@@ -37,7 +36,7 @@ class ScoreLayer(Layer):
 
             self.incrementBallSpeed()
         elif element.type == BALL_PROPERTIES["type"]:
-            self.score -= 100
+            self.gameState.setScore(-100)
 
     def incrementBallSpeed(self):
         if self.counter == 1000:
@@ -52,7 +51,9 @@ class ScoreLayer(Layer):
                     ball.movementVector += Vector2(-1, 1)
 
     def render(self, window):
-        scoreSurface = self.scoreFont.render(str(self.score), True, COLORS["RED"])
+        scoreSurface = self.scoreFont.render(
+            str(self.gameState.score), True, COLORS["RED"]
+        )
         scoreX = WINDOW_PROPERTIES["width"] - scoreSurface.get_width() - 10
         scoreY = WINDOW_PROPERTIES["height"] - scoreSurface.get_height() - 10
         window.blit(scoreSurface, (scoreX, scoreY))

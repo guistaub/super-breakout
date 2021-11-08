@@ -15,6 +15,7 @@ from properties import (
     ELEMENT_COLLISION_SOUND,
     ELEMENT_DESTROYED_SOUND,
 )
+from database import writePlayerData
 
 
 class PlayGameMode(GameMode):
@@ -94,6 +95,7 @@ class PlayGameMode(GameMode):
             self.notifyGameWon()
 
         if len(self.gameState.getActiveBalls()) == 0:
+            writePlayerData("arroz", self.gameState.score, self.gameMode)
             self.notifyGameLost()
 
     def render(self, window):

@@ -21,9 +21,13 @@ class GameState:
         self._tiles = []
         self.cavitySpawnBallsPositions = []
         self.paddleMoventSpeed = 0
+        self.score = 0
 
     def addObserver(self, observer):
         self.__observers.append(observer)
+
+    def setScore(self, value):
+        self.score += value
 
     def getActiveBalls(self):
         return self._balls
