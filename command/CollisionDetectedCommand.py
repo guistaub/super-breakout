@@ -1,5 +1,4 @@
 from .Command import Command
-from state import Ball
 from properties import PADDLE_PROPERTIES, TILE_PROPERTIES, UNIT_STATUS_DESTROYED, CAVITY
 from pygame.math import Vector2
 from random import randint
@@ -34,12 +33,14 @@ class CollisionDetectedCommand(Command):
         if self.gameState.isAabbCollision(self.ball, self.element):
             if self.element.type == PADDLE_PROPERTIES["type"]:
                 if self.ball.movementVector.y > 0:
+                    self.gameState.notifyCollisionDetected()
                     self.verticalBallShift()
 
             elif self.element.type == TILE_PROPERTIES["type"]:
                 self.getRelativePosition()
                 self.element.status = UNIT_STATUS_DESTROYED
                 self.gameState.notifyElementDestroyed(self.element)
+                self.gameState.notifyCollisionDetected()
 
                 if (
                     self.gameMode == CAVITY
@@ -55,3 +56,4 @@ class CollisionDetectedCommand(Command):
                     self.gameState.addBall(
                         self.element.position, Vector2(vectorX, vectorY)
                     )
+                    self.gameState.notifyNewBallAdded()

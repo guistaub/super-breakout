@@ -28,11 +28,12 @@ def loadImage(name):
     return image
 
 
-def laodSound(name):
-    class NoneSound:
-        def play(self):
-            pass
+class NoneSound:
+    def play(self):
+        pass
 
+
+def loadSound(name):
     if not pygame.mixer:
         return NoneSound()
     fullname = os.path.join("sounds", name)
@@ -42,3 +43,25 @@ def laodSound(name):
         print("Cannot load sound:", fullname)
         raise SystemExit(message)
     return sound
+
+
+def loadMusic(name):
+    if not pygame.mixer:
+        return NoneSound()
+    fullname = os.path.join("sounds", name)
+    try:
+        music = pygame.mixer.music.load(fullname)
+    except pygame.error as message:
+        print("Cannot load music:", fullname)
+        raise SystemExit(message)
+    return music
+
+
+def loadFont(name, size):
+    fullname = os.path.join("assets", name)
+    try:
+        font = pygame.font.Font(fullname, size)
+    except pygame.error as message:
+        print("Cannot load font:", fullname)
+        raise SystemExit(message)
+    return font

@@ -1,16 +1,31 @@
-from .GameMode import GameMode
+from .PlayGameMode import PlayGameMode
+from properties import PROGRESSIVE
 
 
-class ProgressiveMode(GameMode):
-    # TODO implement progressive mode addicional methods and setup
-    def processInput(self):
-        # TODO implement progressive mode processInput method
-        pass
+class ProgressiveMode(PlayGameMode):
+    def __init__(self):
+        super().__init__()
+
+        self.gameMode = PROGRESSIVE
+
+        self.gameState.loadProgressive()
 
     def update(self):
-        # TODO implement progressive mode update method
-        pass
+        for command in self.commands:
+            command.run()
+        self.commands.clear()
 
-    def render(self, window):
-        # TODO implement progressive mode render method
-        pass
+        if len(self.gameState.getActiveTiles()) == 30:
+            self.gameState.setPaddleMovementSpeed(5)
+
+        if (
+            len(self.gameState.getActiveBalls()) > 0
+            and len(self.gameState.getActiveTiles()) == 0
+        ):
+            self.gameState.drawTiles()
+
+            # Plays sound for adding new tiles
+            self.gameState.notifyNewBallAdded()
+
+        if len(self.gameState.getActiveBalls()) == 0:
+            self.notifyGameLost()

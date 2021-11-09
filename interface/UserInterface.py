@@ -1,4 +1,17 @@
 import pygame
+from mode.ScoreboardMode import ScoreboardMode
+from properties import (
+    MENU_MUSIC,
+    GAME_START_MESSAGE,
+    GAME_WON_JINGLE,
+    GAME_LOST_JINGLE,
+    GAME_WON_MESSAGE,
+    GAME_LOST_MESSAGE,
+    CLASSIC,
+    PROGRESSIVE,
+    CAVITY,
+    SCOREBOARD,
+)
 from pygame.locals import *
 from mode import (
     MenuGameMode,
@@ -6,10 +19,12 @@ from mode import (
     ClassicMode,
     CavityMode,
     ProgressiveMode,
+    MessageGameMode,
+    PlayerNameInputMode,
 )
 from pygame.math import Vector2
 from properties import *
-from utils import loadImage
+from utils import loadImage, loadSound
 
 
 class UserInterface(GameModeObserver):
@@ -29,21 +44,50 @@ class UserInterface(GameModeObserver):
 
         # Game mode
         self.playGameMode = None
-        self.playGameModes = [CLASSIC, CAVITY, PROGRESSIVE]
-        self.overlayGameMode = MenuGameMode()
+        self.playGameModes = [CLASSIC, CAVITY, PROGRESSIVE, SCOREBOARD]
+        self.overlayGameMode = MessageGameMode(GAME_START_MESSAGE)
         self.overlayGameMode.addObserver(self)
         self.currentActiveMode = OVERLAY
 
-        # TODO add scoreboard game mode
+        # Music
+        self.menuMusic = loadSound(MENU_MUSIC)
+        self.menuMusic.set_volume(0.1)
+        self.menuMusic.play()
+
+        self.gameWonJingle = loadSound(GAME_WON_JINGLE)
+        self.gameWonJingle.set_volume(0.2)
+
+        self.gameLostJingle = loadSound(GAME_LOST_JINGLE)
+        self.gameLostJingle.set_volume(0.2)
 
     def showMenuRequested(self):
+        self.menuMusic.stop()
         self.currentActiveMode = OVERLAY
+        self.overlayGameMode = MenuGameMode()
+        self.overlayGameMode.addObserver(self)
 
     def gameWon(self):
+        self.gameWonJingle.play()
         self.currentActiveMode = OVERLAY
+        self.overlayGameMode = MessageGameMode(
+            GAME_WON_MESSAGE, self.playGameMode.gameMode
+        )
+        self.overlayGameMode.addObserver(self)
 
     def gameLost(self):
+        self.gameLostJingle.play()
         self.currentActiveMode = OVERLAY
+        self.overlayGameMode = MessageGameMode(
+            GAME_LOST_MESSAGE, self.playGameMode.gameMode
+        )
+        self.overlayGameMode.addObserver(self)
+
+    def getPlayerInfo(self):
+        self.currentActiveMode = OVERLAY
+        score = self.playGameMode.gameState.score
+        mode = self.playGameMode.gameMode
+        self.overlayGameMode = PlayerNameInputMode(score, mode)
+        self.overlayGameMode.addObserver(self)
 
     def loadClassicRequested(self):
         self.currentActiveMode = CLASSIC
@@ -56,12 +100,14 @@ class UserInterface(GameModeObserver):
         self.playGameMode.addObserver(self)
 
     def loadProgressiveRequested(self):
-        # TODO implement progressive mode
-        pass
+        self.currentActiveMode = PROGRESSIVE
+        self.playGameMode = ProgressiveMode()
+        self.playGameMode.addObserver(self)
 
     def showScoreboardRequested(self):
-        # TODO implement scoreboard
-        pass
+        self.currentActiveMode = SCOREBOARD
+        self.playGameMode = ScoreboardMode()
+        self.playGameMode.addObserver(self)
 
     def quitRequested(self):
         self.running = False

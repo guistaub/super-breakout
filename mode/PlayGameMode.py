@@ -9,7 +9,13 @@ from command import (
     DeleteDestroyedCommand,
     CollisionDetectedCommand,
 )
-from layer import BallLayer, TileLayer, PaddleLayer, ScoreLayer
+from layer import BallLayer, TileLayer, PaddleLayer, ScoreLayer, SoundLayer
+from properties import (
+    BALL_ADDED_SOUND,
+    ELEMENT_COLLISION_SOUND,
+    ELEMENT_DESTROYED_SOUND,
+)
+from database import writePlayerData
 
 
 class PlayGameMode(GameMode):
@@ -28,6 +34,9 @@ class PlayGameMode(GameMode):
             TileLayer(self.gameState),
             PaddleLayer(self.gameState),
             ScoreLayer(self.gameState),
+            SoundLayer(
+                ELEMENT_COLLISION_SOUND, ELEMENT_DESTROYED_SOUND, BALL_ADDED_SOUND
+            ),
         ]
 
         # Observers
@@ -48,9 +57,9 @@ class PlayGameMode(GameMode):
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
-            moveVector.x += 10
+            moveVector.x += self.gameState.paddleMoventSpeed
         elif keys[pygame.K_LEFT]:
-            moveVector.x -= 10
+            moveVector.x -= self.gameState.paddleMoventSpeed
 
         for paddle in self.gameState.getActivePaddles():
             self.commands.append(MovePaddleCommand(self.gameState, paddle, moveVector))
@@ -86,6 +95,7 @@ class PlayGameMode(GameMode):
             self.notifyGameWon()
 
         if len(self.gameState.getActiveBalls()) == 0:
+            writePlayerData("arroz", self.gameState.score, self.gameMode)
             self.notifyGameLost()
 
     def render(self, window):

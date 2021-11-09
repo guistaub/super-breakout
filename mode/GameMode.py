@@ -25,6 +25,10 @@ class GameMode:
         for observer in self.__observers:
             observer.showScoreboardRequested()
 
+    def notifyGetPlayerInfoRequested(self):
+        for observer in self.__observers:
+            observer.getPlayerInfo()
+
     def notifyGameWon(self):
         for observer in self.__observers:
             observer.gameWon()

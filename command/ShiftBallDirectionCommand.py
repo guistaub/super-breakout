@@ -25,3 +25,5 @@ class ShiftBallDirectionCommand(Command):
                 self.ball.movementVector.x = -self.ball.movementVector.x
             elif newBallPos.y < 0:
                 self.ball.movementVector.y = -self.ball.movementVector.y
+
+            self.gameState.notifyCollisionDetected()
