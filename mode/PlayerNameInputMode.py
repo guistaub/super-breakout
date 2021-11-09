@@ -5,7 +5,7 @@ from utils import loadFont, loadSound
 from properties import CARTOON_FONT, COLORS, WINDOW_PROPERTIES, KEYBOARD_CLICKING_SOUND
 
 
-class PlayerNameInput(GameMode):
+class PlayerNameInputMode(GameMode):
     def __init__(self, score, gameMode):
         super().__init__()
 

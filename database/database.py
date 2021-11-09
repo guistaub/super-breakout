@@ -1,11 +1,12 @@
 import sqlite3
 from properties import CONNECTION
+import os
 
 
 def writePlayerData(playerName: str, playerScore: int, gameMode: str):
 
     # Database Connection
-    connection = sqlite3.connect(CONNECTION)
+    connection = sqlite3.connect(os.path.join("database", CONNECTION))
 
     cursor = connection.cursor()
 
@@ -37,7 +38,7 @@ def getPlayerData(gameMode: str):
     values = []
 
     # Database Connection
-    connection = sqlite3.connect(CONNECTION)
+    connection = sqlite3.connect(os.path.join("database", CONNECTION))
 
     cursor = connection.cursor()
 

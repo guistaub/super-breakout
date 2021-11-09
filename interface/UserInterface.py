@@ -1,4 +1,5 @@
 import pygame
+from mode.ScoreboardMode import ScoreboardMode
 from properties import (
     MENU_MUSIC,
     GAME_START_MESSAGE,
@@ -9,6 +10,7 @@ from properties import (
     CLASSIC,
     PROGRESSIVE,
     CAVITY,
+    SCOREBOARD,
 )
 from pygame.locals import *
 from mode import (
@@ -18,7 +20,7 @@ from mode import (
     CavityMode,
     ProgressiveMode,
     MessageGameMode,
-    PlayerNameInput,
+    PlayerNameInputMode,
 )
 from pygame.math import Vector2
 from properties import *
@@ -42,7 +44,7 @@ class UserInterface(GameModeObserver):
 
         # Game mode
         self.playGameMode = None
-        self.playGameModes = [CLASSIC, CAVITY, PROGRESSIVE]
+        self.playGameModes = [CLASSIC, CAVITY, PROGRESSIVE, SCOREBOARD]
         self.overlayGameMode = MessageGameMode(GAME_START_MESSAGE)
         self.overlayGameMode.addObserver(self)
         self.currentActiveMode = OVERLAY
@@ -57,8 +59,6 @@ class UserInterface(GameModeObserver):
 
         self.gameLostJingle = loadSound(GAME_LOST_JINGLE)
         self.gameLostJingle.set_volume(0.2)
-
-        # TODO add scoreboard game mode
 
     def showMenuRequested(self):
         self.menuMusic.stop()
@@ -86,7 +86,7 @@ class UserInterface(GameModeObserver):
         self.currentActiveMode = OVERLAY
         score = self.playGameMode.gameState.score
         mode = self.playGameMode.gameMode
-        self.overlayGameMode = PlayerNameInput(score, mode)
+        self.overlayGameMode = PlayerNameInputMode(score, mode)
         self.overlayGameMode.addObserver(self)
 
     def loadClassicRequested(self):
@@ -105,8 +105,9 @@ class UserInterface(GameModeObserver):
         self.playGameMode.addObserver(self)
 
     def showScoreboardRequested(self):
-        # TODO implement scoreboard
-        pass
+        self.currentActiveMode = SCOREBOARD
+        self.playGameMode = ScoreboardMode()
+        self.playGameMode.addObserver(self)
 
     def quitRequested(self):
         self.running = False
