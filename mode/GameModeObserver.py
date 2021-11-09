@@ -20,5 +20,8 @@ class GameModeObserver:
     def gameLost(self):
         pass
 
+    def getPlayerInfo(self):
+        pass
+
     def quitRequested(self):
         pass

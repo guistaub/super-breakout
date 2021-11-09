@@ -18,6 +18,7 @@ from mode import (
     CavityMode,
     ProgressiveMode,
     MessageGameMode,
+    PlayerNameInput,
 )
 from pygame.math import Vector2
 from properties import *
@@ -68,13 +69,24 @@ class UserInterface(GameModeObserver):
     def gameWon(self):
         self.gameWonJingle.play()
         self.currentActiveMode = OVERLAY
-        self.overlayGameMode = MessageGameMode(GAME_WON_MESSAGE)
+        self.overlayGameMode = MessageGameMode(
+            GAME_WON_MESSAGE, self.playGameMode.gameMode
+        )
         self.overlayGameMode.addObserver(self)
 
     def gameLost(self):
         self.gameLostJingle.play()
         self.currentActiveMode = OVERLAY
-        self.overlayGameMode = MessageGameMode(GAME_LOST_MESSAGE)
+        self.overlayGameMode = MessageGameMode(
+            GAME_LOST_MESSAGE, self.playGameMode.gameMode
+        )
+        self.overlayGameMode.addObserver(self)
+
+    def getPlayerInfo(self):
+        self.currentActiveMode = OVERLAY
+        score = self.playGameMode.gameState.score
+        mode = self.playGameMode.gameMode
+        self.overlayGameMode = PlayerNameInput(score, mode)
         self.overlayGameMode.addObserver(self)
 
     def loadClassicRequested(self):

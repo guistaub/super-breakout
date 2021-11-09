@@ -5,12 +5,14 @@ import pygame
 
 
 class MessageGameMode(GameMode):
-    def __init__(self, message):
+    def __init__(self, message, mode=None):
         super().__init__()
 
         # Fonts
         self.font = loadFont(CARTOON_FONT, 30)
         self.message = message
+
+        self.mode = mode
 
     def processInput(self):
         for event in pygame.event.get():
@@ -19,8 +21,10 @@ class MessageGameMode(GameMode):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.notifyQuitRequested()
-                elif event.key == pygame.K_RETURN:
+                elif event.key == pygame.K_RETURN and self.mode is None:
                     self.notifyShowMenuRequested()
+                elif event.key == pygame.K_RETURN:
+                    self.notifyGetPlayerInfoRequested()
 
     def update(self):
         pass

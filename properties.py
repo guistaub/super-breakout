@@ -62,6 +62,10 @@ GAME_LOST_JINGLE = "270329__littlerobotsoundfactory__jingle-lose-00.wav"
 
 BALL_ADDED_SOUND = "270330__littlerobotsoundfactory__jingle-achievement-01.wav"
 
+KEYBOARD_CLICKING_SOUND = (
+    "Mechanical-Keyboard-single-button-presses-1-www.FesliyanStudios.com.mp3"
+)
+
 # MESSAGES
 
 GAME_START_MESSAGE = "SUPER PY BREAKOUT - PRESS ENTER TO CONTINUE"

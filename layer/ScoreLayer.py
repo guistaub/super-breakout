@@ -35,8 +35,6 @@ class ScoreLayer(Layer):
                 self.counter = 0
 
             self.incrementBallSpeed()
-        elif element.type == BALL_PROPERTIES["type"]:
-            self.gameState.setScore(-100)
 
     def incrementBallSpeed(self):
         if self.counter == 1000:
