@@ -55,7 +55,7 @@ class ScoreboardMode(GameMode):
         x = WINDOW_PROPERTIES["width"] // 6 * 5 - titleSurface.get_width()
         y = 100
         window.blit(titleSurface, (x, y))
-        for index, score in enumerate(self.classicScores):
+        for index, score in enumerate(self.progressiveScores):
             if index == 10:
                 break
             scoreString = score[0] + " - " + str(score[1])
