@@ -31,7 +31,10 @@ class PlayerNameInputMode(GameMode):
                 if event.key == pygame.K_BACKSPACE:
                     self.name = ""
                 else:
-                    self.name += chr(event.key)
+                    try:
+                        self.name += chr(event.key)
+                    except:
+                        pass
 
     def update(self):
         pass
